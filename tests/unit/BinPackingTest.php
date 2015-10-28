@@ -1,5 +1,7 @@
 <?php namespace BinPacking3d\Tests;
 
+use BinPacking3d\PackIntoMany;
+
 class BinPackingTest extends BinPackingTestBase
 {
 
@@ -35,6 +37,126 @@ class BinPackingTest extends BinPackingTestBase
         $this->assertEquals(100, $bin->getWidth());
         $this->assertEquals(120, $bin->getHeight());
         $this->assertEquals(130, $bin->getDepth());
+    }
+
+    public function testDuplicateItem()
+    {
+        $this->setExpectedException('\BinPacking3d\Exception\CriticalException');
+        $request = new \BinPacking3d\Entity\Request();
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setWeight(5);
+        $item->setItemIdentifier('Test');
+        $item->setProduct(['product_id' => 1]);
+        $request->addItem($item);
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setWeight(5);
+        $item->setItemIdentifier('Test');
+        $item->setProduct(['product_id' => 1]);
+        $request->addItem($item);
+    }
+
+    public function testInvalidItem()
+    {
+        $this->setExpectedException('\BinPacking3d\Exception\CriticalException');
+        $request = new \BinPacking3d\Entity\Request();
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setProduct(['product_id' => 1]);
+        $request->addItem($item);
+    }
+
+    public function testAddInvalidBin()
+    {
+        $this->setExpectedException('\BinPacking3d\Exception\CriticalException');
+        $request = new \BinPacking3d\Entity\Request();
+
+        $bin = new \BinPacking3d\Entity\Bin;
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $bin);
+        $result = $bin->setWidth(100);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setHeight(120);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setDepth(130);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setMaxWeight(10);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterWidth(110);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterHeight(130);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterDepth(140);
+        $request->addBin($bin);
+    }
+
+    public function testAddDuplicateBin()
+    {
+        $this->setExpectedException('\BinPacking3d\Exception\CriticalException');
+        $request = new \BinPacking3d\Entity\Request();
+
+        $bin = new \BinPacking3d\Entity\Bin;
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $bin);
+        $result = $bin->setWidth(100);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setHeight(120);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setDepth(130);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setMaxWeight(10);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterWidth(110);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterHeight(130);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterDepth(140);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setWeight(0.1);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setIdentifier('Test');
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $request->addBin($bin);
+
+        $bin = new \BinPacking3d\Entity\Bin;
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $bin);
+        $result = $bin->setWidth(100);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setHeight(120);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setDepth(130);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setMaxWeight(10);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterWidth(110);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterHeight(130);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setOuterDepth(140);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setWeight(0.1);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $result = $bin->setIdentifier('Test');
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
+        $request->addBin($bin);
+    }
+
+    public function testRequestNoApiKey()
+    {
+        $request = new \BinPacking3d\Entity\Request();
+        $this->setExpectedException('BinPacking3d\Exception\CriticalException');
+        $request->validate();
     }
 
     public function testAddBinExceptionOuterWidth()
@@ -87,12 +209,5 @@ class BinPackingTest extends BinPackingTestBase
         $bin->setOuterHeight(100);
     }
 
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
 
 }

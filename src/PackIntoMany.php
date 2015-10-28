@@ -6,7 +6,7 @@ use BinPacking3d\Entity\Request;
  * Class PackIntoMany
  * @package BinPacking3d
  */
-class PackIntoMany extends Query
+class PackIntoMany extends Query implements QueryInterface
 {
 
     private $defaults = [
@@ -31,14 +31,15 @@ class PackIntoMany extends Query
     /**
      * @param Request $request
      * @param array $params
+     * @param string $region
      */
-    public function __construct(Request $request, $params = [])
+    public function __construct(Request $request, $params = [], $region = Query::REGION_GLOBAL)
     {
         $this->setEndpoint('packIntoMany');
         $this->setRequest($request);
         $this->setParams(array_merge($this->defaults, $params));
 
-        parent::__construct();
+        parent::__construct($region);
     }
 
 }

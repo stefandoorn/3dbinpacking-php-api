@@ -1,6 +1,7 @@
 <?php namespace BinPacking3d\Entity;
 
 use BinPacking3d\EntityInterface;
+use BinPacking3d\Exception\CriticalException;
 
 /**
  * Class Request

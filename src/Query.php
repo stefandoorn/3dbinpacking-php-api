@@ -55,6 +55,11 @@ abstract class Query
     private $cache;
 
     /**
+     * @var string
+     */
+    private $region;
+
+    /**
      * @var int
      */
     private $cacheTtl = 3600;
@@ -64,15 +69,33 @@ abstract class Query
      */
     public function __construct($region = self::REGION_GLOBAL)
     {
-        $this->client = new Client(
-            [
-                'base_uri' => $this->getUrl($region),
-                'timeout' => 2.0,
-                'verify' => $this->getPem($region),
-            ]
+        $this->region = $region;
+
+        $this->client = ClientFactory::getInstance(
+            $this->getUrl($region),
+            $this->getPem($region)
         );
 
         $this->setLogger(new NullLogger);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * @param string $region
+     * @return Query
+     */
+    public function setRegion($region)
+    {
+        $this->region = $region;
+
+        return $this;
     }
 
     /**
@@ -98,7 +121,7 @@ abstract class Query
      * @param $region
      * @return string
      */
-    private function getUrl($region)
+    public function getUrl($region)
     {
         switch ($region) {
             case self::REGION_US:
@@ -134,7 +157,7 @@ abstract class Query
      * @param $region
      * @return string
      */
-    private function getPem($region)
+    public function getPem($region)
     {
         switch ($region) {
             case self::REGION_US:
@@ -264,7 +287,7 @@ abstract class Query
             $cacheKey = md5($requestJson);
 
             // If we have cache, check if we can get some result
-            if ($this->cache) {
+            if ($this->cache && $this->cache->contains($cacheKey)) {
                 $contents = $this->cache->fetch($cacheKey);
 
                 if ($contents) {
