@@ -2,6 +2,7 @@
 
 use BinPacking3d\Entity;
 use BinPacking3d\EntityInterface;
+use BinPacking3d\Utils;
 
 /**
  * Class Item
@@ -204,22 +205,14 @@ class Item implements EntityInterface
      */
     final public function validate()
     {
-        $items = [
+        return Utils::noEmptyItems([
             $this->getWidth(),
             $this->getHeight(),
             $this->getDepth(),
             $this->getQuantity(),
             $this->getItemIdentifier(),
             $this->getWeight(),
-        ];
-
-        foreach ($items as $item) {
-            if ($item === null || (is_numeric($item) && $item <= 0)) {
-                return false;
-            }
-        }
-
-        return true;
+        ]);
     }
 
     /**

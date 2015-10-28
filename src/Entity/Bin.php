@@ -3,6 +3,7 @@
 use BinPacking3d\Entity;
 use BinPacking3d\EntityInterface;
 use BinPacking3d\Exception\CriticalException;
+use BinPacking3d\Utils;
 
 /**
  * Class Bin
@@ -101,22 +102,14 @@ class Bin implements EntityInterface
      */
     final public function validate()
     {
-        $items = [
+        return Utils::noEmptyItems([
             $this->getWidth(),
             $this->getHeight(),
             $this->getDepth(),
             $this->getIdentifier(),
             $this->getMaxWeight(),
             $this->getInternalIdentifier(),
-        ];
-
-        foreach ($items as $item) {
-            if ($item === null || (is_numeric($item) && $item <= 0)) {
-                return false;
-            }
-        }
-
-        return true;
+        ]);
     }
 
     /**
