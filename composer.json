@@ -1,0 +1,34 @@
+{
+  "name": "stefandoorn/3dbinpacking-php-api",
+  "type": "library",
+  "description": "3dbinpacking.com PHP API",
+  "keywords": ["3dbinpacking", "php", "api", "3d", "bin packing"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Stefan Doorn",
+      "email": "stefan@efectos.nl"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "guzzlehttp/guzzle": "~6.0@dev|>=6",
+    "psr/log": "~1|~1.0|1.0.0|dev-master",
+    "doctrine/cache": "^1.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4"
+  },
+  "autoload": {
+    "psr-4": {
+      "BinPacking3d\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "BinPacking3d\\Tests\\": ["tests/unit"]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

@@ -1,0 +1,146 @@
+<?php namespace BinPacking3d\Tests;
+
+use BinPacking3d\PackIntoMany;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
+
+class BinPackingTest extends BinPackingTestBase
+{
+
+    public function testPackIntoMany()
+    {
+        // Build packing request
+        $request = new \BinPacking3d\Entity\Request();
+
+        $bin = new \BinPacking3d\Entity\Bin();
+        $bin->setWidth(100);
+        $bin->setHeight(120);
+        $bin->setDepth(130);
+        $bin->setMaxWeight(10);
+        $bin->setOuterWidth(110);
+        $bin->setOuterHeight(130);
+        $bin->setOuterDepth(140);
+        $bin->setWeight(0.1);
+        $bin->setIdentifier('Test');
+        $bin->setInternalIdentifier(1);
+        $request->addBin($bin);
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setWeight(5);
+        $item->setItemIdentifier('Test');
+        $item->setProduct(['product_id' => 1]);
+        $request->addItem($item);
+
+        // Set extra info
+        $request->setApiKey('API KEY');
+        $request->setUsername('USERNAME');
+
+        // Test request
+        $this->assertInstanceOf('\BinPacking3d\Entity\Request', $request);
+
+        // Build object
+        $packIntoMany = new PackIntoMany($request);
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $packIntoMany);
+
+        // Test params
+        $this->assertEquals([
+            'images_background_color' => '255,255,255',
+            'images_bin_border_color' => '59,59,59',
+            'images_bin_fill_color' => '230,230,230',
+            'images_item_border_color' => '214,79,79',
+            'images_item_fill_color' => '177,14,14',
+            'images_item_back_border_color' => '215,103,103',
+            'images_sbs_last_item_fill_color' => '99,93,93',
+            'images_sbs_last_item_border_color' => '145,133,133',
+            'images_width' => 250,
+            'images_height' => 250,
+            'images_source' => 'base64',
+            'images_sbs' => 1,
+            'stats' => 1,
+            'item_coordinates' => 1,
+            'images_complete' => 1,
+            'images_separated' => 1
+        ], $packIntoMany->getParams());
+
+        // Test get logger without logger
+        $this->assertInstanceOf('\Psr\Log\NullLogger', $packIntoMany->getLogger());
+
+        // Test set logger with logger & result
+        $result = $packIntoMany->setLogger(new \Psr\Log\NullLogger());
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $result);
+        $this->assertInstanceOf('\Psr\\Log\LoggerInterface', $packIntoMany->getLogger());
+        $this->assertInstanceOf('\Psr\Log\NullLogger', $packIntoMany->getLogger());
+    }
+
+    public function testCorrectPackIntoManyRequest()
+    {
+        // Build a fake request
+        // Build packing request
+        $request = new \BinPacking3d\Entity\Request();
+
+        $bin = new \BinPacking3d\Entity\Bin();
+        $bin->setWidth(100);
+        $bin->setHeight(120);
+        $bin->setDepth(130);
+        $bin->setMaxWeight(10);
+        $bin->setOuterWidth(110);
+        $bin->setOuterHeight(130);
+        $bin->setOuterDepth(140);
+        $bin->setWeight(0.1);
+        $bin->setIdentifier('Test');
+        $bin->setInternalIdentifier(1);
+        $request->addBin($bin);
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setWeight(5);
+        $item->setItemIdentifier('Test');
+        $item->setProduct(['product_id' => 1]);
+        $request->addItem($item);
+
+        // Set extra info
+        $request->setApiKey('API KEY');
+        $request->setUsername('USERNAME');
+
+        $packIntoMany = new PackIntoMany($request);
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $packIntoMany);
+        $this->assertInstanceOf('\BinPacking3d\Query', $packIntoMany);
+
+        // Build response mock stack
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'],
+                file_get_contents($this->getFilePath('responses/PackIntoMany/correct.json')))
+        ]);
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+
+        // Get response
+        $response = $client->get('/PackIntoMany');
+
+        // Tests
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Get parsed JSON request
+        $this->assertJsonStringEqualsJsonFile($this->getFilePath('requests/PackIntoMany/request.json'),
+            $packIntoMany->renderRequestJson());
+
+        // Get response and test it
+        $response = $packIntoMany->handleResponse($response);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Packed', $response);
+        $this->assertEquals(1, $response->count());
+        $this->assertEquals(0, $response->errorCount());
+        $this->assertCount(1, $response->getBins());
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $response->getBins()[0]);
+    }
+
+
+}
