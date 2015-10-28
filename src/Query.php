@@ -1,9 +1,9 @@
 <?php namespace BinPacking3d;
 
-use BinPacking3d\Entity\CriticalException;
 use BinPacking3d\Entity\Packed;
 use BinPacking3d\Entity\Request;
 use BinPacking3d\Entity\Response;
+use BinPacking3d\Exception\CriticalException;
 use Doctrine\Common\Cache\Cache;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -249,11 +249,7 @@ abstract class Query
             $requestJson = $this->renderRequestJson();
 
             // Log request
-            if ($this->cache) {
-                $this->log('info', 'Request to cache');
-            } else {
-                $this->log('info', 'Request to 3dbinpacking');
-            }
+            $this->log('info', ($this->cache ? 'Request to cache' : 'Request to 3dbinpacking'));
             $this->log('debug', $requestJson);
 
             // Build cache key
@@ -307,9 +303,9 @@ abstract class Query
 
             $result = json_decode($contents);
             return new Packed(new Response($result), $this->request);
-        } else {
-            throw new CriticalException('Non 200 response');
         }
+
+        throw new CriticalException('Non 200 response');
     }
 
     /**

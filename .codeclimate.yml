@@ -1,6 +1,9 @@
 engines:
   phpcodesniffer:
     enabled: true
+    checks:
+      Squiz ControlStructures ControlSignature SpaceAfterKeyword:
+        enabled: false
   phpmd:
     enabled: true
 ratings:
