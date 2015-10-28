@@ -1,7 +1,5 @@
 <?php namespace BinPacking3d\Tests;
 
-use BinPacking3d\PackIntoMany;
-
 class BinPackingTest extends BinPackingTestBase
 {
 

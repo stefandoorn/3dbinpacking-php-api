@@ -154,7 +154,7 @@ abstract class Query
     }
 
     /**
-     * @param $region
+     * @param string $region
      * @return string
      */
     public function getPem($region)
@@ -190,7 +190,7 @@ abstract class Query
     }
 
     /**
-     * @return mixed
+     * @return LoggerInterface
      */
     public function getLogger()
     {
@@ -198,7 +198,7 @@ abstract class Query
     }
 
     /**
-     * @param mixed $logger
+     * @param LoggerInterface $logger
      * @return Query
      */
     public function setLogger(LoggerInterface $logger)
@@ -220,7 +220,7 @@ abstract class Query
     }
 
     /**
-     * @return mixed
+     * @return Cache
      */
     public function getCache()
     {
@@ -239,7 +239,7 @@ abstract class Query
     }
 
     /**
-     * @param $level
+     * @param string $level
      * @param $message
      * @return bool
      */
@@ -265,7 +265,7 @@ abstract class Query
     }
 
     /**
-     * @return Response
+     * @return Packed
      * @throws \Exception
      */
     public function run()
@@ -317,8 +317,8 @@ abstract class Query
      * Handle response and return
      *
      * @param \GuzzleHttp\Psr7\Response $response
-     * @param null $cacheKey
-     * @return Response
+     * @param string $cacheKey
+     * @return Packed
      * @throws \Exception
      */
     public function handleResponse(\GuzzleHttp\Psr7\Response $response, $cacheKey = null)
@@ -352,7 +352,7 @@ abstract class Query
     }
 
     /**
-     * @param mixed $endpoint
+     * @param string $endpoint
      * @return Query
      */
     protected function setEndpoint($endpoint)
