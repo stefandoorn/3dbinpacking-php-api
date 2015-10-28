@@ -5,6 +5,9 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/stefandoorn/3dbinpacking-php-api/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/stefandoorn/3dbinpacking-php-api/?branch=master)
 [![Code Climate](https://codeclimate.com/github/stefandoorn/3dbinpacking-php-api/badges/gpa.svg)](https://codeclimate.com/github/stefandoorn/3dbinpacking-php-api)
 [![StyleCI](https://styleci.io/repos/45122563/shield)](https://styleci.io/repos/45122563)
+[![Latest Stable Version](http://img.shields.io/packagist/v/stefandoorn/3dbinpacking-php-api.svg?style=flat)](https://packagist.org/packages/stefandoorn/3dbinpacking-php-api)
+[![Total Downloads](https://img.shields.io/packagist/dt/stefandoorn/3dbinpacking-php-api.svg?style=flat)](https://packagist.org/packages/stefandoorn/3dbinpacking-php-api)
+[![License](https://img.shields.io/packagist/l/stefandoorn/3dbinpacking-php-api.svg?style=flat)](https://packagist.org/packages/stefandoorn/3dbinpacking-php-api)
 
 This library acts as a PHP wrapper around the API available at [3dbinpacking.com](http://www.3dbinpacking.com).
 
