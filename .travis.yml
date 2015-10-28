@@ -19,3 +19,7 @@ matrix:
     - php: nightly
 
 sudo: false
+
+addons:
+    code_climate:
+        repo_token: b6cee06aa4389089a3ecd77fb0264b2b00c0f3b50576e87eaf8b9091a93d1e4d
