@@ -1,6 +1,6 @@
 <?php namespace BinPacking3d\Tests;
 
-class BaseTest extends BinPackingTestBase
+class BinPackingTest extends BinPackingTestBase
 {
     /**
      * @var \UnitTester

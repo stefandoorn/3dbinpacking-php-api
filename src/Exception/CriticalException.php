@@ -4,4 +4,5 @@ use Exception;
 
 class CriticalException extends Exception
 {
+
 }

@@ -6,7 +6,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 
-class BinPackingTest extends BinPackingTestBase
+class PackIntoManyTest extends BinPackingTestBase
 {
 
     public function testPackIntoMany()
