@@ -2,7 +2,7 @@
 
 [![Build Status](https://api.travis-ci.org/stefandoorn/3dbinpacking-php-api.svg?branch=master)](https://travis-ci.org/stefandoorn/3dbinpacking-php-api)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/stefandoorn/3dbinpacking-php-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/stefandoorn/3dbinpacking-php-api/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/stefandoorn/3dbinpacking-php-api/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/stefandoorn/3dbinpacking-php-api/?branch=master)
+[![Test Coverage](https://codeclimate.com/github/stefandoorn/3dbinpacking-php-api/badges/coverage.svg)](https://codeclimate.com/github/stefandoorn/3dbinpacking-php-api/coverage)
 [![Code Climate](https://codeclimate.com/github/stefandoorn/3dbinpacking-php-api/badges/gpa.svg)](https://codeclimate.com/github/stefandoorn/3dbinpacking-php-api)
 [![StyleCI](https://styleci.io/repos/45122563/shield)](https://styleci.io/repos/45122563)
 [![Latest Stable Version](http://img.shields.io/packagist/v/stefandoorn/3dbinpacking-php-api.svg?style=flat)](https://packagist.org/packages/stefandoorn/3dbinpacking-php-api)
@@ -73,6 +73,7 @@ $request->setUsername('USERNAME');
 // Perform request and get results
 $boxes = $packIntoMany->run();
 
+// Process result, in here we get all the packed boxes including the items per box
 foreach ($boxes->yieldBins() as $packedBox) {
     // Get weight of box
     $weight = $packedBox->getUsedWeight();
