@@ -19,7 +19,3 @@ after_success:
 
 addons:
   - code_climate
-
-matrix:
-  allow_failures:
-    - php: hhvm
