@@ -16,11 +16,6 @@ class Packed
     private $bins = array();
 
     /**
-     * @var int
-     */
-    private $errorCount = 0;
-
-    /**
      * @param $response
      * @param Request $request
      * @throws \Exception
@@ -30,10 +25,8 @@ class Packed
         // Parse response
         $response = $response->get()->response;
 
-        // @todo
+        // Handle errors when thrown
         if ($response->status !== 1 || !empty($response->errors)) {
-            $this->errorCount = count($response->errors);
-
             $this->handleErrors($response->errors);
         }
 
@@ -74,10 +67,10 @@ class Packed
     {
         // Sort based on severity
         $order = ['critical', 'warning'];
-        usort($errors, function ($a, $b) use ($order) {
-            if (array_search($a->level, $order) > array_search($b->level, $order)) {
+        usort($errors, function ($firstError, $secondError) use ($order) {
+            if (array_search($firstError->level, $order) > array_search($secondError->level, $order)) {
                 return -1;
-            } elseif (array_search($a->level, $order) < array_search($b->level, $order)) {
+            } elseif (array_search($firstError->level, $order) < array_search($secondError->level, $order)) {
                 return 1;
             }
 
@@ -97,14 +90,6 @@ class Packed
                 throw new \Exception($error->message);
                 break;
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function errorCount()
-    {
-        return $this->errorCount;
     }
 
     /**

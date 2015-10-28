@@ -137,10 +137,92 @@ class PackIntoManyTest extends BinPackingTestBase
         $response = $packIntoMany->handleResponse($response);
         $this->assertInstanceOf('\BinPacking3d\Entity\Packed', $response);
         $this->assertEquals(1, $response->count());
-        $this->assertEquals(0, $response->errorCount());
         $this->assertCount(1, $response->getBins());
         $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $response->getBins()[0]);
+
+        $count = 0;
+        foreach($response->yieldBins() as $bin) {
+            $count++;
+        }
+        $this->assertEquals(1, $count);
     }
 
+    public function testIncorrectPackIntoManyRequest()
+    {
+        // Build a fake request
+        // Build packing request
+        $request = new \BinPacking3d\Entity\Request();
+
+        $packIntoMany = new PackIntoMany($request);
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $packIntoMany);
+        $this->assertInstanceOf('\BinPacking3d\Query', $packIntoMany);
+
+        // Set expected exception
+        $this->setExpectedException('\BinPacking3d\Exception\CriticalException');
+
+        // Build response mock stack
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'],
+                file_get_contents($this->getFilePath('responses/PackIntoMany/error_critical.json')))
+        ]);
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+
+        // Get response
+        $response = $client->get('/PackIntoMany');
+        $packIntoMany->handleResponse($response);
+    }
+
+    public function testWarningPackIntoManyRequest()
+    {
+        // Build a fake request
+        // Build packing request
+        $request = new \BinPacking3d\Entity\Request();
+
+        $packIntoMany = new PackIntoMany($request);
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $packIntoMany);
+        $this->assertInstanceOf('\BinPacking3d\Query', $packIntoMany);
+
+        // Set expected exception
+        $this->setExpectedException('\BinPacking3d\Exception\WarningException');
+
+        // Build response mock stack
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'],
+                file_get_contents($this->getFilePath('responses/PackIntoMany/error_warning.json')))
+        ]);
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+
+        // Get response
+        $response = $client->get('/PackIntoMany');
+        $packIntoMany->handleResponse($response);
+    }
+
+    public function testErrorPackIntoManyRequest()
+    {
+        // Build a fake request
+        // Build packing request
+        $request = new \BinPacking3d\Entity\Request();
+
+        $packIntoMany = new PackIntoMany($request);
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $packIntoMany);
+        $this->assertInstanceOf('\BinPacking3d\Query', $packIntoMany);
+
+        // Set expected exception
+        $this->setExpectedException('\Exception');
+
+        // Build response mock stack
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'],
+                file_get_contents($this->getFilePath('responses/PackIntoMany/error_other.json')))
+        ]);
+        $handler = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handler]);
+
+        // Get response
+        $response = $client->get('/PackIntoMany');
+        $packIntoMany->handleResponse($response);
+    }
 
 }

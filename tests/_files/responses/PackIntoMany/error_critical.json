@@ -35,7 +35,12 @@
         ]
       }
     ],
-    "errors": [],
+    "errors": [
+      {
+        "level": "critical",
+        "message": "Test"
+      }
+    ],
     "status": 1,
     "not_packed_items": [],
     "response_time": 0.24518

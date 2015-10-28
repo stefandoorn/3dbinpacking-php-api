@@ -1,1 +1,24 @@
-{"username":"USERNAME","api_key":"API KEY","bins":[{"w":100,"h":120,"d":130,"id":"Test","max_wg":10}],"items":[{"w":50,"h":60,"d":70,"q":1,"vr":0,"id":"Test","wg":5}]}
+{
+  "username": "USERNAME",
+  "api_key": "API KEY",
+  "bins": [
+    {
+      "w": 100,
+      "h": 120,
+      "d": 130,
+      "id": "Test",
+      "max_wg": 10
+    }
+  ],
+  "items": [
+    {
+      "w": 50,
+      "h": 60,
+      "d": 70,
+      "q": 1,
+      "vr": 0,
+      "id": "Test",
+      "wg": 5
+    }
+  ]
+}
