@@ -15,7 +15,8 @@ This library acts as a PHP wrapper around the API available at [3dbinpacking.com
 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
-3. [License](#license-section)
+3. [Example](#example)
+4. [License](#license-section)
 
 <a name="requirements"></a>
 ## Requirements
@@ -37,6 +38,7 @@ run the Composer command to install the latest stable version of the API wrapper
 composer require stefandoorn/3dbinpacking-php-api
 ```
 
+<a name="example"></a>
 ## Example
 
 ````
