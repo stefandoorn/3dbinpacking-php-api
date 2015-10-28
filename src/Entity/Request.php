@@ -29,20 +29,6 @@ class Request implements EntityInterface
     private $items = array();
 
     /**
-     * @return bool
-     * @throws \Exception
-     */
-    public function validate()
-    {
-        if($this->getUsername() === null || $this->getApiKey() === null || empty($this->bins) || empty($this->items))
-        {
-            throw new CriticalException('Not all required variables entered for rendering.');
-        }
-
-        return true;
-    }
-
-    /**
      * @return array
      * @throws \Exception
      */
@@ -52,13 +38,13 @@ class Request implements EntityInterface
 
         // Render bins
         $bins = [];
-        foreach($this->yieldBins() as $bin) {
+        foreach ($this->yieldBins() as $bin) {
             $bins[] = $bin->render();
         }
 
         // Render items
         $items = [];
-        foreach($this->yieldItems() as $item) {
+        foreach ($this->yieldItems() as $item) {
             $items[] = $item->render();
         }
 
@@ -71,83 +57,16 @@ class Request implements EntityInterface
     }
 
     /**
-     * @param $identifier
-     * @return mixed
+     * @return bool
+     * @throws \Exception
      */
-    public function getItem($identifier) {
-        return $this->items[$identifier];
-    }
-
-    /**
-     * @param $identifier
-     * @return mixed
-     */
-    public function getBin($identifier) {
-        return $this->bins[$identifier];
-    }
-
-    /**
-     * @return \Generator
-     */
-    private function yieldBins()
+    public function validate()
     {
-        foreach($this->bins as $bin)
-        {
-            yield $bin;
-        }
-    }
-
-    /**
-     * @return \Generator
-     */
-    private function yieldItems()
-    {
-        foreach($this->items as $item)
-        {
-            yield $item;
-        }
-    }
-
-    /**
-     * @param Item $item
-     * @return $this
-     */
-    public function addItem(Item $item)
-    {
-        // Check for unique identifier
-        if(array_key_exists($item->getItemIdentifier(), $this->items)) {
-            throw new CriticalException('Identifier already exists');
+        if ($this->getUsername() === null || $this->getApiKey() === null || empty($this->bins) || empty($this->items)) {
+            throw new CriticalException('Not all required variables entered for rendering.');
         }
 
-        // Check if we can validate it
-        if(!$item->validate()) {
-            throw new CriticalException('Cannot validate item settings, item: ' . print_r($item->render(), true));
-        }
-
-        // Add to store
-        $this->items[$item->getItemIdentifier()] = $item;
-        return $this;
-    }
-
-    /**
-     * @param Bin $bin
-     * @return $this
-     */
-    public function addBin(Bin $bin)
-    {
-        // Check for unique identifier
-        if(array_key_exists($bin->getIdentifier(), $this->bins)) {
-            throw new CriticalException('Identifier already exists');
-        }
-
-        // Check if we can validate it
-        if(!$bin->validate()) {
-            throw new CriticalException('Cannot validate bin settings, bin: ' . print_r($bin->render(), true));
-        }
-
-        // Add to store
-        $this->bins[$bin->getIdentifier()] = $bin;
-        return $this;
+        return true;
     }
 
     /**
@@ -187,6 +106,86 @@ class Request implements EntityInterface
     }
 
     /**
+     * @return \Generator
+     */
+    private function yieldBins()
+    {
+        foreach ($this->bins as $bin) {
+            yield $bin;
+        }
+    }
+
+    /**
+     * @return \Generator
+     */
+    private function yieldItems()
+    {
+        foreach ($this->items as $item) {
+            yield $item;
+        }
+    }
+
+    /**
+     * @param $identifier
+     * @return mixed
+     */
+    public function getItem($identifier)
+    {
+        return $this->items[$identifier];
+    }
+
+    /**
+     * @param $identifier
+     * @return mixed
+     */
+    public function getBin($identifier)
+    {
+        return $this->bins[$identifier];
+    }
+
+    /**
+     * @param Item $item
+     * @return $this
+     */
+    public function addItem(Item $item)
+    {
+        // Check for unique identifier
+        if (array_key_exists($item->getItemIdentifier(), $this->items)) {
+            throw new CriticalException('Identifier already exists');
+        }
+
+        // Check if we can validate it
+        if (!$item->validate()) {
+            throw new CriticalException('Cannot validate item settings, item: ' . print_r($item->render(), true));
+        }
+
+        // Add to store
+        $this->items[$item->getItemIdentifier()] = $item;
+        return $this;
+    }
+
+    /**
+     * @param Bin $bin
+     * @return $this
+     */
+    public function addBin(Bin $bin)
+    {
+        // Check for unique identifier
+        if (array_key_exists($bin->getIdentifier(), $this->bins)) {
+            throw new CriticalException('Identifier already exists');
+        }
+
+        // Check if we can validate it
+        if (!$bin->validate()) {
+            throw new CriticalException('Cannot validate bin settings, bin: ' . print_r($bin->render(), true));
+        }
+
+        // Add to store
+        $this->bins[$bin->getIdentifier()] = $bin;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getBins()
@@ -221,7 +220,6 @@ class Request implements EntityInterface
         $this->items = $items;
         return $this;
     }
-
 
 
 }

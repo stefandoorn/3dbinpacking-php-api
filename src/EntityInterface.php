@@ -4,7 +4,8 @@
  * Interface EntityInterface
  * @package BinPacking3d
  */
-interface EntityInterface {
+interface EntityInterface
+{
 
     /**
      * @return mixed

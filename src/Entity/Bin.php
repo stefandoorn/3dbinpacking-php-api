@@ -110,8 +110,8 @@ class Bin implements EntityInterface
             $this->getInternalIdentifier()
         ];
 
-        foreach($items as $item) {
-            if($item === null || (is_numeric($item) && $item <= 0)) {
+        foreach ($items as $item) {
+            if ($item === null || (is_numeric($item) && $item <= 0)) {
                 return false;
             }
         }
@@ -133,7 +133,7 @@ class Bin implements EntityInterface
      */
     public function setImage($image)
     {
-        $this->image = (string) $image;
+        $this->image = (string)$image;
         return $this;
     }
 
@@ -143,7 +143,7 @@ class Bin implements EntityInterface
      */
     public function saveImage($path)
     {
-        if(!$this->getImage()) {
+        if (!$this->getImage()) {
             return false;
         }
 
@@ -182,7 +182,7 @@ class Bin implements EntityInterface
      */
     public function setUsedSpace($usedSpace)
     {
-        $this->usedSpace = (float) $usedSpace;
+        $this->usedSpace = (float)$usedSpace;
         return $this;
     }
 
@@ -200,7 +200,7 @@ class Bin implements EntityInterface
      */
     public function setUsedWeight($usedWeight)
     {
-        $this->usedWeight = (float) $usedWeight;
+        $this->usedWeight = (float)$usedWeight;
         return $this;
     }
 
@@ -225,8 +225,7 @@ class Bin implements EntityInterface
      */
     public function yieldItems()
     {
-        foreach($this->items as $item)
-        {
+        foreach ($this->items as $item) {
             yield $item;
         }
     }
@@ -245,7 +244,7 @@ class Bin implements EntityInterface
      */
     public function setWidth($width)
     {
-        $this->width = (float) $width;
+        $this->width = (float)$width;
         return $this;
     }
 
@@ -263,10 +262,9 @@ class Bin implements EntityInterface
      */
     public function setOuterWidth($outerWidth)
     {
-        $outerWidth = (float) $outerWidth;
+        $outerWidth = (float)$outerWidth;
 
-        if(!$this->getWidth() || $outerWidth < $this->getWidth())
-        {
+        if (!$this->getWidth() || $outerWidth < $this->getWidth()) {
             throw new CriticalException('Outer width should be bigger than inner width.');
         }
 
@@ -288,10 +286,9 @@ class Bin implements EntityInterface
      */
     public function setOuterHeight($outerHeight)
     {
-        $outerHeight = (float) $outerHeight;
+        $outerHeight = (float)$outerHeight;
 
-        if(!$this->getHeight() || $outerHeight < $this->getHeight())
-        {
+        if (!$this->getHeight() || $outerHeight < $this->getHeight()) {
             throw new CriticalException('Outer height should be bigger than inner width.');
         }
 
@@ -313,10 +310,9 @@ class Bin implements EntityInterface
      */
     public function setOuterDepth($outerDepth)
     {
-        $outerDepth = (float) $outerDepth;
+        $outerDepth = (float)$outerDepth;
 
-        if(!$this->getDepth() || $outerDepth < $this->getDepth())
-        {
+        if (!$this->getDepth() || $outerDepth < $this->getDepth()) {
             throw new CriticalException('Outer depth should be bigger than inner width.');
         }
 
@@ -338,7 +334,7 @@ class Bin implements EntityInterface
      */
     public function setWeight($weight)
     {
-        $this->weight = (float) $weight;
+        $this->weight = (float)$weight;
         return $this;
     }
 
@@ -356,7 +352,7 @@ class Bin implements EntityInterface
      */
     public function setHeight($height)
     {
-        $this->height = (float) $height;
+        $this->height = (float)$height;
         return $this;
     }
 
@@ -374,7 +370,7 @@ class Bin implements EntityInterface
      */
     public function setDepth($depth)
     {
-        $this->depth = (float) $depth;
+        $this->depth = (float)$depth;
         return $this;
     }
 
@@ -392,7 +388,7 @@ class Bin implements EntityInterface
      */
     public function setIdentifier($identifier)
     {
-        $this->identifier = (string) $identifier;
+        $this->identifier = (string)$identifier;
         return $this;
     }
 
@@ -410,7 +406,7 @@ class Bin implements EntityInterface
      */
     public function setMaxWeight($maxWeight)
     {
-        $this->maxWeight = (float) $maxWeight;
+        $this->maxWeight = (float)$maxWeight;
         return $this;
     }
 

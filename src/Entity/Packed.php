@@ -31,22 +31,19 @@ class Packed
         $response = $response->get()->response;
 
         // @todo
-        if($response->status !== 1 || !empty($response->errors))
-        {
+        if ($response->status !== 1 || !empty($response->errors)) {
             $this->errorCount = count($response->errors);
 
             $this->handleErrors($response->errors);
         }
 
         // Loop over packed bins
-        foreach($response->bins_packed as $packedBin)
-        {
+        foreach ($response->bins_packed as $packedBin) {
             // Find original bin
             $originalBin = $request->getBin($packedBin->bin_data->id);
 
             // Loop over items
-            foreach($packedBin->items as $item)
-            {
+            foreach ($packedBin->items as $item) {
                 $originalItem = $request->getItem($item->id);
                 $originalBin->addItem($originalItem);
             }
@@ -66,9 +63,47 @@ class Packed
     }
 
     /**
+     * Throw most severe error as exception
+     *
+     * @param $errors
+     * @throws CriticalException
+     * @throws WarningException
+     * @throws \Exception
+     */
+    public function handleErrors($errors)
+    {
+        // Sort based on severity
+        $order = ['critical', 'warning'];
+        usort($errors, function ($a, $b) use ($order) {
+            if (array_search($a->level, $order) > array_search($b->level, $order)) {
+                return -1;
+            } elseif (array_search($a->level, $order) < array_search($b->level, $order)) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        // Throw first one as exception
+        $error = array_shift($errors);
+        switch ($error->level) {
+            case 'critical':
+                throw new CriticalException($error->message);
+                break;
+            case 'warning':
+                throw new WarningException($error->message);
+                break;
+            default:
+                throw new \Exception($error->message);
+                break;
+        }
+    }
+
+    /**
      * @return int
      */
-    public function errorCount() {
+    public function errorCount()
+    {
         return $this->errorCount;
     }
 
@@ -85,8 +120,7 @@ class Packed
      */
     public function yieldBins()
     {
-        foreach($this->bins as $bin)
-        {
+        foreach ($this->bins as $bin) {
             yield $bin;
         }
     }
@@ -97,44 +131,6 @@ class Packed
     public function count()
     {
         return count($this->bins);
-    }
-
-    /**
-     * Throw most severe error as exception
-     *
-     * @param $errors
-     * @throws CriticalException
-     * @throws WarningException
-     * @throws \Exception
-     */
-    public function handleErrors($errors)
-    {
-        // Sort based on severity
-        $order = ['critical', 'warning'];
-        usort($errors, function($a, $b) use ($order) {
-            if(array_search($a->level, $order) > array_search($b->level, $order)) {
-                return -1;
-            }
-            elseif(array_search($a->level, $order) < array_search($b->level, $order)) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        // Throw first one as exception
-        $error = array_shift($errors);
-        switch($error->level) {
-            case 'critical':
-                throw new CriticalException($error->message);
-                break;
-            case 'warning':
-                throw new WarningException($error->message);
-                break;
-            default:
-                throw new \Exception($error->message);
-                break;
-        }
     }
 
 }
