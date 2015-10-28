@@ -37,6 +37,81 @@ run the Composer command to install the latest stable version of the API wrapper
 composer require stefandoorn/3dbinpacking-php-api
 ```
 
+## Example
+
+````
+// Build packing request
+$request = new \BinPacking3d\Entity\Request();
+
+$bin = new \BinPacking3d\Entity\Bin();
+$bin->setWidth(100);
+$bin->setHeight(120);
+$bin->setDepth(130);
+$bin->setMaxWeight(10);
+$bin->setOuterWidth(110);
+$bin->setOuterHeight(130);
+$bin->setOuterDepth(140);
+$bin->setWeight(0.1);
+$bin->setIdentifier('Test');
+$bin->setInternalIdentifier(1);
+$request->addBin($bin);
+
+// Item
+$item = new \BinPacking3d\Entity\Item();
+$item->setWidth(50);
+$item->setHeight(60);
+$item->setDepth(70);
+$item->setWeight(5);
+$item->setItemIdentifier('Test');
+$item->setProduct(['product_id' => 1]);
+$request->addItem($item);
+
+// Set extra info
+$request->setApiKey('API KEY');
+$request->setUsername('USERNAME');
+
+// Perform request and get results
+$boxes = $packIntoMany->run();
+
+foreach ($boxes->yieldBins() as $packedBox) {
+    // Get weight of box
+    $weight = $packedBox->getUsedWeight();
+
+    // Get dimensions
+    $height = $packedBox->getOuterHeight();
+    $width = $packedBox->getOuterWidth();
+    $depth = $packedBox->getOuterDepth();
+
+    // Get identifier
+    $identifier = $packedBin->getIdentifier();
+
+    // Get items in this box
+    foreach ($packedBox->yieldItems() as $item) {
+    	// Get additional product data supplied (e.g. IDs, SKUs, etc)
+    	$product = $item->getProduct();
+
+    	// Add to database etc...
+    }
+}
+````
+
+Optional you can add a [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md) compatible logger to the Request object:
+
+````
+$log = new \Monolog\Logger('binpacking');
+$log->pushHandler(new \Monolog\Handler\StreamHandler('binpacking.log', \Monolog\Logger::DEBUG));
+````
+
+Optional you can add a Cache driver compatible with [doctrine/cache](https://github.com/doctrine/cache), e.g.:
+
+````
+$cacheDriver = new \Doctrine\Common\Cache\RedisCache();
+$redis = new Redis;
+$redis->connect($redisHost);
+$cacheDriver->setRedis($redis);
+$packIntoMany->setCache($cacheDriver);
+````
+
 <a name="license-section"></a>
 ## License
 
