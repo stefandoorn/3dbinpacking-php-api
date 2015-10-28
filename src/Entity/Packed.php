@@ -67,7 +67,8 @@ class Packed
     {
         // Sort based on severity
         $order = ['critical', 'warning'];
-        usort($errors, function ($firstError, $secondError) use ($order) {
+        usort(
+            $errors, function ($firstError, $secondError) use ($order) {
             if (array_search($firstError->level, $order) > array_search($secondError->level, $order)) {
                 return -1;
             } elseif (array_search($firstError->level, $order) < array_search($secondError->level, $order)) {
@@ -75,7 +76,8 @@ class Packed
             }
 
             return 0;
-        });
+        }
+        );
 
         // Throw first one as exception
         $error = array_shift($errors);

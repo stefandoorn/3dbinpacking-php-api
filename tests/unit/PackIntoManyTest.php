@@ -49,24 +49,26 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $packIntoMany);
 
         // Test params
-        $this->assertEquals([
-            'images_background_color' => '255,255,255',
-            'images_bin_border_color' => '59,59,59',
-            'images_bin_fill_color' => '230,230,230',
-            'images_item_border_color' => '214,79,79',
-            'images_item_fill_color' => '177,14,14',
-            'images_item_back_border_color' => '215,103,103',
-            'images_sbs_last_item_fill_color' => '99,93,93',
-            'images_sbs_last_item_border_color' => '145,133,133',
-            'images_width' => 250,
-            'images_height' => 250,
-            'images_source' => 'base64',
-            'images_sbs' => 1,
-            'stats' => 1,
-            'item_coordinates' => 1,
-            'images_complete' => 1,
-            'images_separated' => 1
-        ], $packIntoMany->getParams());
+        $this->assertEquals(
+            [
+                'images_background_color' => '255,255,255',
+                'images_bin_border_color' => '59,59,59',
+                'images_bin_fill_color' => '230,230,230',
+                'images_item_border_color' => '214,79,79',
+                'images_item_fill_color' => '177,14,14',
+                'images_item_back_border_color' => '215,103,103',
+                'images_sbs_last_item_fill_color' => '99,93,93',
+                'images_sbs_last_item_border_color' => '145,133,133',
+                'images_width' => 250,
+                'images_height' => 250,
+                'images_source' => 'base64',
+                'images_sbs' => 1,
+                'stats' => 1,
+                'item_coordinates' => 1,
+                'images_complete' => 1,
+                'images_separated' => 1,
+            ], $packIntoMany->getParams()
+        );
 
         // Test get logger without logger
         $this->assertInstanceOf('\Psr\Log\NullLogger', $packIntoMany->getLogger());
@@ -116,10 +118,14 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->assertInstanceOf('\BinPacking3d\Query', $packIntoMany);
 
         // Build response mock stack
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'],
-                file_get_contents($this->getFilePath('responses/PackIntoMany/correct.json')))
-        ]);
+        $mock = new MockHandler(
+            [
+                new Response(
+                    200, ['Content-Type' => 'application/json'],
+                    file_get_contents($this->getFilePath('responses/PackIntoMany/correct.json'))
+                ),
+            ]
+        );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
 
@@ -130,8 +136,10 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->assertEquals(200, $response->getStatusCode());
 
         // Get parsed JSON request
-        $this->assertJsonStringEqualsJsonFile($this->getFilePath('requests/PackIntoMany/request.json'),
-            $packIntoMany->renderRequestJson());
+        $this->assertJsonStringEqualsJsonFile(
+            $this->getFilePath('requests/PackIntoMany/request.json'),
+            $packIntoMany->renderRequestJson()
+        );
 
         // Get response and test it
         $response = $packIntoMany->handleResponse($response);
@@ -141,7 +149,7 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $response->getBins()[0]);
 
         $count = 0;
-        foreach($response->yieldBins() as $bin) {
+        foreach ($response->yieldBins() as $bin) {
             $count++;
         }
         $this->assertEquals(1, $count);
@@ -161,10 +169,14 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->setExpectedException('\BinPacking3d\Exception\CriticalException');
 
         // Build response mock stack
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'],
-                file_get_contents($this->getFilePath('responses/PackIntoMany/error_critical.json')))
-        ]);
+        $mock = new MockHandler(
+            [
+                new Response(
+                    200, ['Content-Type' => 'application/json'],
+                    file_get_contents($this->getFilePath('responses/PackIntoMany/error_critical.json'))
+                ),
+            ]
+        );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
 
@@ -187,10 +199,14 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->setExpectedException('\BinPacking3d\Exception\WarningException');
 
         // Build response mock stack
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'],
-                file_get_contents($this->getFilePath('responses/PackIntoMany/error_warning.json')))
-        ]);
+        $mock = new MockHandler(
+            [
+                new Response(
+                    200, ['Content-Type' => 'application/json'],
+                    file_get_contents($this->getFilePath('responses/PackIntoMany/error_warning.json'))
+                ),
+            ]
+        );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
 
@@ -213,10 +229,14 @@ class PackIntoManyTest extends BinPackingTestBase
         $this->setExpectedException('\Exception');
 
         // Build response mock stack
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'],
-                file_get_contents($this->getFilePath('responses/PackIntoMany/error_other.json')))
-        ]);
+        $mock = new MockHandler(
+            [
+                new Response(
+                    200, ['Content-Type' => 'application/json'],
+                    file_get_contents($this->getFilePath('responses/PackIntoMany/error_other.json'))
+                ),
+            ]
+        );
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
 

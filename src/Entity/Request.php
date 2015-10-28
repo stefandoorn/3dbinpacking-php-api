@@ -52,7 +52,7 @@ class Request implements EntityInterface
             'username' => $this->getUsername(),
             'api_key' => $this->getApiKey(),
             'bins' => $bins,
-            'items' => $items
+            'items' => $items,
         ];
     }
 
@@ -84,6 +84,7 @@ class Request implements EntityInterface
     public function setUsername($username)
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -102,6 +103,7 @@ class Request implements EntityInterface
     public function setApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
+
         return $this;
     }
 
@@ -161,6 +163,7 @@ class Request implements EntityInterface
 
         // Add to store
         $this->items[$item->getItemIdentifier()] = $item;
+
         return $this;
     }
 
@@ -182,6 +185,7 @@ class Request implements EntityInterface
 
         // Add to store
         $this->bins[$bin->getIdentifier()] = $bin;
+
         return $this;
     }
 
@@ -200,6 +204,7 @@ class Request implements EntityInterface
     public function setBins($bins)
     {
         $this->bins = $bins;
+
         return $this;
     }
 
@@ -218,6 +223,7 @@ class Request implements EntityInterface
     public function setItems($items)
     {
         $this->items = $items;
+
         return $this;
     }
 

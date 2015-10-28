@@ -25,7 +25,7 @@ class PackIntoMany extends Query
         'stats' => 1,
         'item_coordinates' => 1,
         'images_complete' => 1,
-        'images_separated' => 1
+        'images_separated' => 1,
     ];
 
     /**

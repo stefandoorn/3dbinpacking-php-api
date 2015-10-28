@@ -2,20 +2,12 @@
 
 class BinPackingTest extends BinPackingTestBase
 {
+
     /**
      * @var \UnitTester
      */
     protected $tester;
 
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
-
-    // tests
     public function testAddBin()
     {
         $bin = new \BinPacking3d\Entity\Bin;
@@ -61,6 +53,8 @@ class BinPackingTest extends BinPackingTestBase
         $bin->setOuterWidth(100);
     }
 
+    // tests
+
     public function testAddBinExceptionOuterDepth()
     {
         $bin = new \BinPacking3d\Entity\Bin;
@@ -91,6 +85,14 @@ class BinPackingTest extends BinPackingTestBase
         $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $bin);
         $this->setExpectedException('Exception');
         $bin->setOuterHeight(100);
+    }
+
+    protected function _before()
+    {
+    }
+
+    protected function _after()
+    {
     }
 
 }

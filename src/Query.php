@@ -64,11 +64,13 @@ abstract class Query
      */
     public function __construct($region = self::REGION_GLOBAL)
     {
-        $this->client = new Client([
-            'base_uri' => $this->getUrl($region),
-            'timeout' => 2.0,
-            'verify' => $this->getPem($region)
-        ]);
+        $this->client = new Client(
+            [
+                'base_uri' => $this->getUrl($region),
+                'timeout' => 2.0,
+                'verify' => $this->getPem($region),
+            ]
+        );
 
         $this->setLogger(new NullLogger);
     }
@@ -88,6 +90,7 @@ abstract class Query
     public function setClient($client)
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -123,6 +126,7 @@ abstract class Query
     public function setCacheTtl($cacheTtl)
     {
         $this->cacheTtl = $cacheTtl;
+
         return $this;
     }
 
@@ -158,6 +162,7 @@ abstract class Query
     public function setParams($params)
     {
         $this->params = $params;
+
         return $this;
     }
 
@@ -176,6 +181,7 @@ abstract class Query
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+
         return $this;
     }
 
@@ -186,6 +192,7 @@ abstract class Query
     public function setCache(Cache $cache)
     {
         $this->cache = $cache;
+
         return $this;
     }
 
@@ -204,6 +211,7 @@ abstract class Query
     protected function setRequest(Request $request)
     {
         $this->request = $request;
+
         return $this;
     }
 
@@ -264,14 +272,17 @@ abstract class Query
                     $this->log('debug', $contents);
 
                     $result = json_decode($contents);
+
                     return new Packed(new Response($result), $this->request);
                 }
             }
 
             // No cache, or not connected, then we perform the real request
-            $response = $this->client->get($url, [
-                'json' => array_merge($request, ['params' => $this->getParams()])
-            ]);
+            $response = $this->client->get(
+                $url, [
+                'json' => array_merge($request, ['params' => $this->getParams()]),
+            ]
+            );
 
             return $this->handleResponse($response, $cacheKey);
         } catch (RequestException $e) {
@@ -302,6 +313,7 @@ abstract class Query
             }
 
             $result = json_decode($contents);
+
             return new Packed(new Response($result), $this->request);
         }
 
@@ -323,6 +335,7 @@ abstract class Query
     protected function setEndpoint($endpoint)
     {
         $this->endpoint = $endpoint;
+
         return $this;
     }
 

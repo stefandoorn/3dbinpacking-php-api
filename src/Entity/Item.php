@@ -62,7 +62,7 @@ class Item implements EntityInterface
             'q' => $this->getQuantity(),
             'vr' => (int)$this->isVerticalRotationLock(),
             'id' => $this->getItemIdentifier(),
-            'wg' => $this->getWeight()
+            'wg' => $this->getWeight(),
         ];
     }
 
@@ -81,6 +81,7 @@ class Item implements EntityInterface
     public function setWidth($width)
     {
         $this->width = (float)$width;
+
         return $this;
     }
 
@@ -99,6 +100,7 @@ class Item implements EntityInterface
     public function setHeight($height)
     {
         $this->height = (float)$height;
+
         return $this;
     }
 
@@ -117,6 +119,7 @@ class Item implements EntityInterface
     public function setDepth($depth)
     {
         $this->depth = (float)$depth;
+
         return $this;
     }
 
@@ -135,6 +138,7 @@ class Item implements EntityInterface
     public function setQuantity($quantity)
     {
         $this->quantity = (int)$quantity;
+
         return $this;
     }
 
@@ -153,6 +157,7 @@ class Item implements EntityInterface
     public function setVerticalRotationLock($verticalRotationLock)
     {
         $this->verticalRotationLock = (bool)$verticalRotationLock;
+
         return $this;
     }
 
@@ -171,6 +176,7 @@ class Item implements EntityInterface
     public function setItemIdentifier($itemIdentifier)
     {
         $this->itemIdentifier = (string)$itemIdentifier;
+
         return $this;
     }
 
@@ -189,6 +195,7 @@ class Item implements EntityInterface
     public function setWeight($weight)
     {
         $this->weight = (float)$weight;
+
         return $this;
     }
 
@@ -203,7 +210,7 @@ class Item implements EntityInterface
             $this->getDepth(),
             $this->getQuantity(),
             $this->getItemIdentifier(),
-            $this->getWeight()
+            $this->getWeight(),
         ];
 
         foreach ($items as $item) {
@@ -230,6 +237,7 @@ class Item implements EntityInterface
     public function setProduct($product)
     {
         $this->product = $product;
+
         return $this;
     }
 
