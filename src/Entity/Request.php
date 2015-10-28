@@ -221,5 +221,4 @@ class Request implements EntityInterface
         return $this;
     }
 
-
 }

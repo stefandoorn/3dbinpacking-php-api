@@ -195,7 +195,7 @@ class Item implements EntityInterface
     /**
      * @return bool
      */
-    public function validate()
+    final public function validate()
     {
         $items = [
             $this->getWidth(),
@@ -232,6 +232,5 @@ class Item implements EntityInterface
         $this->product = $product;
         return $this;
     }
-
 
 }

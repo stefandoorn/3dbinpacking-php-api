@@ -1,1 +1,3 @@
 preset: psr2
+disabled:
+  - no_blank_lines_after_class_opening

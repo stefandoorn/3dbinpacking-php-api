@@ -99,7 +99,7 @@ class Bin implements EntityInterface
      * @return bool
      * @throws \Exception
      */
-    public final function validate()
+    final public function validate()
     {
         $items = [
             $this->getWidth(),

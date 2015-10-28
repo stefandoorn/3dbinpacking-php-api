@@ -330,5 +330,4 @@ abstract class Query
         return $this;
     }
 
-
 }
