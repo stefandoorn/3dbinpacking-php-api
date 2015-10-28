@@ -20,4 +20,8 @@ matrix:
 
 sudo: false
 
-after_script: ./codeclimate.sh
+addons:
+  - code_climate
+
+after_script:
+  - vendor/bin/test-reporter
