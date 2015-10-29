@@ -103,7 +103,7 @@ class Packed
     }
 
     /**
-     * @return \Generator
+     * @return \Iterator
      */
     public function yieldBins()
     {
