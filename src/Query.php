@@ -344,7 +344,7 @@ abstract class Query
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     protected function getEndpoint()
     {
