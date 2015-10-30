@@ -424,11 +424,12 @@ class PackIntoManyTest extends BinPackingTestBase
         $packIntoMany->handleResponse($response);
     }
 
-
     public function testQuery()
     {
         $request = new \BinPacking3d\Entity\Request();
-        $query = new PackIntoMany($request);
+        $obj = new PackIntoMany($request);
+        $this->assertInstanceOf('\BinPacking3d\PackIntoMany', $obj);
+        $this->assertInstanceOf('\BinPacking3d\Query', $obj);
     }
 
 }

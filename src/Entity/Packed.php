@@ -84,13 +84,10 @@ class Packed
         switch ($error->level) {
             case 'critical':
                 throw new CriticalException($error->message);
-                break;
             case 'warning':
                 throw new WarningException($error->message);
-                break;
             default:
                 throw new \Exception($error->message);
-                break;
         }
     }
 
