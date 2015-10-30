@@ -253,7 +253,7 @@ abstract class Query
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEndpoint()
     {
@@ -261,7 +261,7 @@ abstract class Query
     }
 
     /**
-     * @param mixed $endpoint
+     * @param string $endpoint
      * @return Query
      */
     protected function setEndpoint($endpoint)
@@ -306,6 +306,8 @@ abstract class Query
         if ($this->cache && $this->cache->contains($cacheKey)) {
             return json_decode($this->cache->fetch($cacheKey));
         }
+
+        return false;
     }
 
     /**
@@ -330,12 +332,12 @@ abstract class Query
     /**
      * Handle response and return
      *
-     * @param \GuzzleHttp\Psr7\Response $response
-     * @param string $cacheKey
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param null $cacheKey
      * @return Packed
-     * @throws \Exception
+     * @throws CriticalException
      */
-    public function handleResponse(\GuzzleHttp\Psr7\Response $response, $cacheKey = null)
+    public function handleResponse(\Psr\Http\Message\ResponseInterface $response, $cacheKey = null)
     {
         $contents = $response->getBody()->getContents();
 
