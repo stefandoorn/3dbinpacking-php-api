@@ -179,7 +179,7 @@ abstract class Query
     }
 
     /**
-     * @param mixed $logger
+     * @param LoggerInterface $logger
      * @return Query
      */
     public function setLogger(LoggerInterface $logger)
@@ -331,8 +331,8 @@ abstract class Query
      * Handle response and return
      *
      * @param \GuzzleHttp\Psr7\Response $response
-     * @param null $cacheKey
-     * @return Response
+     * @param string $cacheKey
+     * @return Packed
      * @throws \Exception
      */
     public function handleResponse(\GuzzleHttp\Psr7\Response $response, $cacheKey = null)
