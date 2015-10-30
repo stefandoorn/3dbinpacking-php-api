@@ -166,6 +166,7 @@ class BinPackingTest extends BinPackingTestBase
         $result = $bin->setOuterHeight(130);
         $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
         $result = $bin->setOuterDepth(140);
+        $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $result);
         $request->addBin($bin);
     }
 

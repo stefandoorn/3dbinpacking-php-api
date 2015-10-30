@@ -234,7 +234,7 @@ abstract class Query
             $contents = $this->getFromCache($cacheKey);
             if ($contents) {
                 $this->log('info', 'Response from cache');
-                $this->log('debug', $contents);
+                $this->log('debug', json_encode($contents));
 
                 return new Packed(new Response($contents), $this->request);
             }
