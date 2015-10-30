@@ -97,7 +97,7 @@ abstract class Query
     }
 
     /**
-     * @param $region
+     * @param string $region
      * @return string
      */
     public function getPem($region)
@@ -171,7 +171,7 @@ abstract class Query
     }
 
     /**
-     * @return mixed
+     * @return LoggerInterface
      */
     public function getLogger()
     {
@@ -190,7 +190,7 @@ abstract class Query
     }
 
     /**
-     * @return mixed
+     * @return Cache
      */
     public function getCache()
     {
@@ -209,7 +209,7 @@ abstract class Query
     }
 
     /**
-     * @return Response
+     * @return Packed
      * @throws \Exception
      */
     public function run()
@@ -288,7 +288,7 @@ abstract class Query
     }
 
     /**
-     * @param $level
+     * @param string $level
      * @param $message
      * @return bool
      */
@@ -298,7 +298,7 @@ abstract class Query
     }
 
     /**
-     * @param $cacheKey
+     * @param string $cacheKey
      * @return mixed
      */
     private function getFromCache($cacheKey)
@@ -333,7 +333,7 @@ abstract class Query
      * Handle response and return
      *
      * @param \Psr\Http\Message\ResponseInterface $response
-     * @param null $cacheKey
+     * @param string $cacheKey
      * @return Packed
      * @throws CriticalException
      */
@@ -358,7 +358,7 @@ abstract class Query
 
     /**
      * @param $cacheKey
-     * @param $contents
+     * @param string $contents
      */
     private function saveToCache($cacheKey, $contents)
     {
