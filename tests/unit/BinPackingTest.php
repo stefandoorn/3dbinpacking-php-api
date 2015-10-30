@@ -1,7 +1,5 @@
 <?php namespace BinPacking3d\Tests;
 
-use BinPacking3d\PackIntoMany;
-
 class BinPackingTest extends BinPackingTestBase
 {
 
@@ -10,7 +8,7 @@ class BinPackingTest extends BinPackingTestBase
      */
     protected $tester;
 
-    public function testAddBin()
+    public function testCreateBin()
     {
         $bin = new \BinPacking3d\Entity\Bin;
         $this->assertInstanceOf('\BinPacking3d\Entity\Bin', $bin);
@@ -37,6 +35,32 @@ class BinPackingTest extends BinPackingTestBase
         $this->assertEquals(100, $bin->getWidth());
         $this->assertEquals(120, $bin->getHeight());
         $this->assertEquals(130, $bin->getDepth());
+        $this->assertEquals(0.1, $bin->getWeight());
+        $this->assertNull($bin->getImage());
+        $this->assertNull($bin->getUsedSpace());
+        $this->assertNull($bin->getUsedWeight());
+        $this->assertEmpty($bin->getItems());
+        $this->assertFalse($bin->saveImage('test.png'));
+    }
+
+    public function testAddBin()
+    {
+        $request = new \BinPacking3d\Entity\Request();
+
+        $bin = new \BinPacking3d\Entity\Bin;
+        $bin->setWidth(100)
+            ->setHeight(120)
+            ->setDepth(130)
+            ->setMaxWeight(10)
+            ->setOuterWidth(110)
+            ->setOuterHeight(130)
+            ->setOuterDepth(140)
+            ->setWeight(0.1)
+            ->setIdentifier('Test')
+            ->setInternalIdentifier('Test1');
+
+        $this->assertInstanceOf('\BinPacking3d\Entity\Request', $request->addBin($bin));
+        $this->assertCount(1, $request->getBins());
     }
 
     public function testDuplicateItem()
@@ -77,6 +101,49 @@ class BinPackingTest extends BinPackingTestBase
         $item->setDepth(70);
         $item->setProduct(['product_id' => 1]);
         $request->addItem($item);
+    }
+
+    public function testSetQuantity()
+    {
+        $request = new \BinPacking3d\Entity\Request();
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setWeight(5);
+        $item->setItemIdentifier('Test');
+        $this->assertNull($item->getProduct());
+        $item->setProduct(['product_id' => 1]);
+        $this->assertEquals(['product_id' => 1], $item->getProduct());
+        $this->assertEquals(1, $item->getQuantity());
+        $item->setQuantity(2);
+        $this->assertEquals(2, $item->getQuantity());
+        $this->assertFalse($item->isVerticalRotationLock());
+        $item->setVerticalRotationLock(true);
+        $this->assertTrue($item->isVerticalRotationLock());
+        $request->addItem($item);
+    }
+
+    public function testSetItems()
+    {
+        $request = new \BinPacking3d\Entity\Request();
+
+        // Item
+        $item = new \BinPacking3d\Entity\Item();
+        $item->setWidth(50);
+        $item->setHeight(60);
+        $item->setDepth(70);
+        $item->setWeight(5);
+        $item->setItemIdentifier('Test');
+        $item->setProduct(['product_id' => 1]);
+        $item->setQuantity(2);
+        $item->setVerticalRotationLock(true);
+        $request->addItem($item);
+        $request->setItems([$item]);
+        $this->assertCount(1, $request->getItems());
+        $this->assertEquals($item, $request->getItems()[0]);
     }
 
     public function testAddInvalidBin()
@@ -208,6 +275,5 @@ class BinPackingTest extends BinPackingTestBase
         $this->setExpectedException('Exception');
         $bin->setOuterHeight(100);
     }
-
 
 }

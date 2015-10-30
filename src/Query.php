@@ -80,6 +80,40 @@ abstract class Query
     }
 
     /**
+     * @param $region
+     * @return string
+     */
+    public function getUrl($region)
+    {
+        switch ($region) {
+            case self::REGION_US:
+                return 'https://us-east.api.3dbinpacking.com/packer/';
+            case self::REGION_EU:
+                return 'https://eu.api.3dbinpacking.com/packer/';
+            case self::REGION_GLOBAL:
+            default:
+                return 'https://global-api.3dbinpacking.com/packer/';
+        }
+    }
+
+    /**
+     * @param $region
+     * @return string
+     */
+    public function getPem($region)
+    {
+        switch ($region) {
+            case self::REGION_US:
+                return __DIR__ . '/../cert/us-east.api.3dbinpacking.com.pem';
+            case self::REGION_EU:
+                return __DIR__ . '/../cert/eu.api.3dbinpacking.com.pem';
+            case self::REGION_GLOBAL:
+            default:
+                return __DIR__ . '/../cert/global-api.3dbinpacking.com.pem';
+        }
+    }
+
+    /**
      * @return string
      */
     public function getRegion()
@@ -118,23 +152,6 @@ abstract class Query
     }
 
     /**
-     * @param $region
-     * @return string
-     */
-    public function getUrl($region)
-    {
-        switch ($region) {
-            case self::REGION_US:
-                return 'https://us-east.api.3dbinpacking.com/packer/';
-            case self::REGION_EU:
-                return 'https://eu.api.3dbinpacking.com/packer/';
-            case self::REGION_GLOBAL:
-            default:
-                return 'https://global-api.3dbinpacking.com/packer/';
-        }
-    }
-
-    /**
      * @return int
      */
     public function getCacheTtl()
@@ -149,42 +166,6 @@ abstract class Query
     public function setCacheTtl($cacheTtl)
     {
         $this->cacheTtl = $cacheTtl;
-
-        return $this;
-    }
-
-    /**
-     * @param $region
-     * @return string
-     */
-    public function getPem($region)
-    {
-        switch ($region) {
-            case self::REGION_US:
-                return __DIR__ . '/../cert/us-east.api.3dbinpacking.com.pem';
-            case self::REGION_EU:
-                return __DIR__ . '/../cert/eu.api.3dbinpacking.com.pem';
-            case self::REGION_GLOBAL:
-            default:
-                return __DIR__ . '/../cert/global-api.3dbinpacking.com.pem';
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * @param mixed $params
-     * @return Query
-     */
-    public function setParams($params)
-    {
-        $this->params = $params;
 
         return $this;
     }
@@ -209,17 +190,6 @@ abstract class Query
     }
 
     /**
-     * @param Cache $cache
-     * @return $this
-     */
-    public function setCache(Cache $cache)
-    {
-        $this->cache = $cache;
-
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getCache()
@@ -228,40 +198,14 @@ abstract class Query
     }
 
     /**
-     * @param Request $request
+     * @param Cache $cache
      * @return $this
      */
-    protected function setRequest(Request $request)
+    public function setCache(Cache $cache)
     {
-        $this->request = $request;
+        $this->cache = $cache;
 
         return $this;
-    }
-
-    /**
-     * @param $level
-     * @param $message
-     * @return bool
-     */
-    private function log($level, $message)
-    {
-        return $this->logger->{$level}($message);
-    }
-
-    /**
-     * @return array
-     */
-    public function renderRequest()
-    {
-        return $this->request->render();
-    }
-
-    /**
-     * @return string
-     */
-    public function renderRequestJson()
-    {
-        return json_encode($this->renderRequest());
     }
 
     /**
@@ -287,30 +231,100 @@ abstract class Query
             $cacheKey = md5($requestJson);
 
             // If we have cache, check if we can get some result
-            if ($this->cache && $this->cache->contains($cacheKey)) {
-                $contents = $this->cache->fetch($cacheKey);
+            $contents = $this->getFromCache($cacheKey);
+            if ($contents) {
+                $this->log('info', 'Response from cache');
+                $this->log('debug', $contents);
 
-                if ($contents) {
-                    $this->log('info', 'Response from cache');
-                    $this->log('debug', $contents);
-
-                    $result = json_decode($contents);
-
-                    return new Packed(new Response($result), $this->request);
-                }
+                return new Packed(new Response($contents), $this->request);
             }
 
             // No cache, or not connected, then we perform the real request
             $response = $this->client->get(
                 $url, [
-                'json' => array_merge($request, ['params' => $this->getParams()]),
-            ]
+                    'json' => array_merge($request, ['params' => $this->getParams()]),
+                ]
             );
 
             return $this->handleResponse($response, $cacheKey);
         } catch (RequestException $e) {
             throw new CriticalException($e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndpoint()
+    {
+        return $this->endpoint;
+    }
+
+    /**
+     * @param mixed $endpoint
+     * @return Query
+     */
+    protected function setEndpoint($endpoint)
+    {
+        $this->endpoint = $endpoint;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function renderRequest()
+    {
+        return $this->request->render();
+    }
+
+    /**
+     * @return string
+     */
+    public function renderRequestJson()
+    {
+        return json_encode($this->renderRequest());
+    }
+
+    /**
+     * @param $level
+     * @param $message
+     * @return bool
+     */
+    private function log($level, $message)
+    {
+        return $this->logger->{$level}($message);
+    }
+
+    /**
+     * @param $cacheKey
+     * @return mixed
+     */
+    private function getFromCache($cacheKey)
+    {
+        if ($this->cache && $this->cache->contains($cacheKey)) {
+            return json_decode($this->cache->fetch($cacheKey));
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param mixed $params
+     * @return Query
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
+
+        return $this;
     }
 
     /**
@@ -331,33 +345,35 @@ abstract class Query
 
         if ($response->getStatusCode() === 200) {
             // If cache and we get here, save it
-            if ($this->cache && !is_null($cacheKey)) {
-                $this->cache->save($cacheKey, $contents, $this->cacheTtl);
-            }
+            $this->saveToCache($cacheKey, $contents);
 
-            $result = json_decode($contents);
-
-            return new Packed(new Response($result), $this->request);
+            // Return Packed object with data processed
+            return new Packed(new Response(json_decode($contents)), $this->request);
         }
 
         throw new CriticalException('Non 200 response');
     }
 
     /**
-     * @return mixed
+     * @param $cacheKey
+     * @param $contents
      */
-    protected function getEndpoint()
+    private function saveToCache($cacheKey, $contents)
     {
-        return $this->endpoint;
+        if ($this->cache && !is_null($cacheKey)) {
+            return $this->cache->save($cacheKey, $contents, $this->cacheTtl);
+        }
+
+        return false;
     }
 
     /**
-     * @param mixed $endpoint
-     * @return Query
+     * @param Request $request
+     * @return $this
      */
-    protected function setEndpoint($endpoint)
+    protected function setRequest(Request $request)
     {
-        $this->endpoint = $endpoint;
+        $this->request = $request;
 
         return $this;
     }

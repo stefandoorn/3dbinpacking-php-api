@@ -109,12 +109,13 @@ class PackIntoManyTest extends BinPackingTestBase
 
         $url = $packIntoMany->getUrl(null);
         $this->assertEquals($url, $packIntoMany->getUrl(Query::REGION_GLOBAL));
+        $this->assertEquals('https://us-east.api.3dbinpacking.com/packer/', $packIntoMany->getUrl(Query::REGION_US));
     }
 
     public function testCacheTtl()
     {
         $request = new \BinPacking3d\Entity\Request();
-        $packIntoMany = new PackIntoMany($request, [], Query::REGION_EU);
+        $packIntoMany = new PackIntoMany($request, [], Query::REGION_US);
         $this->assertEquals(3600, $packIntoMany->getCacheTtl());
         $packIntoMany->setCacheTtl(8400);
         $this->assertEquals(8400, $packIntoMany->getCacheTtl());
@@ -129,6 +130,13 @@ class PackIntoManyTest extends BinPackingTestBase
         $packIntoMany->setCache($cacheDriver);
         $this->assertInstanceOf('\Doctrine\Common\Cache\Cache', $packIntoMany->getCache());
         $this->assertInstanceOf('\Doctrine\Common\Cache\ArrayCache', $packIntoMany->getCache());
+    }
+
+    public function testGetEndpoint()
+    {
+        $request = new \BinPacking3d\Entity\Request();
+        $packIntoMany = new PackIntoMany($request, [], Query::REGION_US);
+        $this->assertEquals('packIntoMany', $packIntoMany->getEndPoint());
     }
 
     public function testCorrectCachePackIntoManyRequest()
@@ -307,6 +315,23 @@ class PackIntoManyTest extends BinPackingTestBase
             $count++;
         }
         $this->assertEquals(1, $count);
+
+        // Test bin to get items etc
+        foreach ($response->yieldBins() as $bin) {
+            $items = $bin->getItems();
+            $this->assertCount(1, $items);
+            $this->assertInstanceOf('\BinPacking3d\Entity\Item', $items[0]);
+            $this->assertEquals(
+                file_get_contents($this->getFilePath('responses/PackIntoMany/img_content.txt')), $bin->getImage()
+            );
+            $this->assertEquals(25.974, $bin->getUsedSpace());
+            $this->assertEquals(0.4, $bin->getUsedWeight());
+
+            // Try to save image
+            $tempFile = tempnam(sys_get_temp_dir(), 'img');
+            $this->assertTrue($bin->saveImage($tempFile));
+            unlink($tempFile);
+        }
     }
 
     public function testIncorrectPackIntoManyRequest()

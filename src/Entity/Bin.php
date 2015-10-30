@@ -97,51 +97,116 @@ class Bin implements EntityInterface
     }
 
     /**
-     * @return bool
-     * @throws \Exception
-     */
-    final public function validate()
-    {
-        return Utils::noEmptyItems([
-            $this->getWidth(),
-            $this->getHeight(),
-            $this->getDepth(),
-            $this->getIdentifier(),
-            $this->getMaxWeight(),
-            $this->getInternalIdentifier(),
-        ]);
-    }
-
-    /**
      * @return mixed
      */
-    public function getImage()
+    public function getWidth()
     {
-        return $this->image;
+        return $this->width;
     }
 
     /**
-     * @param mixed $image
+     * @param mixed $width
      * @return Bin
      */
-    public function setImage($image)
+    public function setWidth($width)
     {
-        $this->image = (string)$image;
+        $this->width = (float)$width;
 
         return $this;
     }
 
     /**
-     * @param $path
-     * @return bool|int
+     * @return mixed
      */
-    public function saveImage($path)
+    public function getHeight()
     {
-        if (!$this->getImage()) {
-            return false;
-        }
+        return $this->height;
+    }
 
-        return file_put_contents($path, base64_decode($this->getImage()));
+    /**
+     * @param mixed $height
+     * @return Bin
+     */
+    public function setHeight($height)
+    {
+        $this->height = (float)$height;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepth()
+    {
+        return $this->depth;
+    }
+
+    /**
+     * @param mixed $depth
+     * @return Bin
+     */
+    public function setDepth($depth)
+    {
+        $this->depth = (float)$depth;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param mixed $identifier
+     * @return Bin
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = (string)$identifier;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxWeight()
+    {
+        return $this->maxWeight;
+    }
+
+    /**
+     * @param mixed $maxWeight
+     * @return Bin
+     */
+    public function setMaxWeight($maxWeight)
+    {
+        $this->maxWeight = (float)$maxWeight;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     */
+    final public function validate()
+    {
+        return Utils::noEmptyItems(
+            [
+                $this->getWidth(),
+                $this->getHeight(),
+                $this->getDepth(),
+                $this->getIdentifier(),
+                $this->getMaxWeight(),
+                $this->getInternalIdentifier(),
+            ]
+        );
     }
 
     /**
@@ -159,6 +224,38 @@ class Bin implements EntityInterface
     public function setInternalIdentifier($internalIdentifier)
     {
         $this->internalIdentifier = $internalIdentifier;
+
+        return $this;
+    }
+
+    /**
+     * @param $path
+     * @return bool|int
+     */
+    public function saveImage($path)
+    {
+        if (!$this->getImage()) {
+            return false;
+        }
+
+        return (bool)file_put_contents($path, base64_decode($this->getImage()));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     * @return Bin
+     */
+    public function setImage($image)
+    {
+        $this->image = (string)$image;
 
         return $this;
     }
@@ -225,25 +322,6 @@ class Bin implements EntityInterface
         foreach ($this->items as $item) {
             yield $item;
         }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * @param mixed $width
-     * @return Bin
-     */
-    public function setWidth($width)
-    {
-        $this->width = (float)$width;
-
-        return $this;
     }
 
     /**
@@ -336,82 +414,6 @@ class Bin implements EntityInterface
     public function setWeight($weight)
     {
         $this->weight = (float)$weight;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    /**
-     * @param mixed $height
-     * @return Bin
-     */
-    public function setHeight($height)
-    {
-        $this->height = (float)$height;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDepth()
-    {
-        return $this->depth;
-    }
-
-    /**
-     * @param mixed $depth
-     * @return Bin
-     */
-    public function setDepth($depth)
-    {
-        $this->depth = (float)$depth;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
-    /**
-     * @param mixed $identifier
-     * @return Bin
-     */
-    public function setIdentifier($identifier)
-    {
-        $this->identifier = (string)$identifier;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaxWeight()
-    {
-        return $this->maxWeight;
-    }
-
-    /**
-     * @param mixed $maxWeight
-     * @return Bin
-     */
-    public function setMaxWeight($maxWeight)
-    {
-        $this->maxWeight = (float)$maxWeight;
 
         return $this;
     }
