@@ -65,6 +65,11 @@ abstract class Query
     private $cacheTtl = 3600;
 
     /**
+     * @var
+     */
+    private $timeout;
+
+    /**
      * @param string $region
      */
     public function __construct($region = self::REGION_GLOBAL)
@@ -77,6 +82,24 @@ abstract class Query
         );
 
         $this->setLogger(new NullLogger);
+    }
+
+    /**
+     * @param mixed $timeout
+     * @return Query
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
     }
 
     /**
@@ -239,12 +262,18 @@ abstract class Query
                 return new Packed(new Response($contents), $this->request);
             }
 
+            // Prepare request parameters
+            $params = [
+                'json' => array_merge($request, ['params' => $this->getParams()]),
+            ];
+
+            // Add timeout
+            if (!is_null($this->timeout)) {
+                $params['timeout'] = $this->timeout;
+            }
+
             // No cache, or not connected, then we perform the real request
-            $response = $this->client->get(
-                $url, [
-                    'json' => array_merge($request, ['params' => $this->getParams()]),
-                ]
-            );
+            $response = $this->client->get($url, $params);
 
             return $this->handleResponse($response, $cacheKey);
         } catch (RequestException $e) {
