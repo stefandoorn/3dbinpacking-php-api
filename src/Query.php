@@ -103,7 +103,10 @@ abstract class Query
     }
 
     /**
-     * @param $region
+     * Supplying a region will use the closest by URL
+     * Supplying false will disable certificate verification and will start using the global URL always
+     *
+     * @param string|bool $region
      * @return string
      */
     public function getUrl($region)
