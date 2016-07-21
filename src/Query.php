@@ -120,7 +120,10 @@ abstract class Query
     }
 
     /**
-     * @param string $region
+     * Supplying false disables CA verification, which is not advised.
+     * Supplying a region will check against the proper certificate.
+     *
+     * @param string|bool $region
      * @return string
      */
     public function getPem($region)
@@ -130,6 +133,8 @@ abstract class Query
                 return __DIR__ . '/../cert/us-east.api.3dbinpacking.com.pem';
             case self::REGION_EU:
                 return __DIR__ . '/../cert/eu.api.3dbinpacking.com.pem';
+            case false:
+                return false;
             case self::REGION_GLOBAL:
             default:
                 return __DIR__ . '/../cert/global-api.3dbinpacking.com.pem';
