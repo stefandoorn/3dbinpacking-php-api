@@ -11,6 +11,8 @@
 
 This library acts as a PHP wrapper around the API available at [3dbinpacking.com](http://www.3dbinpacking.com).
 
+# WARNING: this package is abandoned and will not receive support. It will stay available on GH.
+
 ## Table Of Content
 
 1. [Requirements](#requirements)
