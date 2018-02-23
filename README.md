@@ -1,3 +1,5 @@
+## Note: this package is not maintained anymore and will be abandoned. If you would like to take over, please let me know through the issues.
+
 # 3dbinpacking.com PHP API Wrapper
 
 [![Build Status](https://api.travis-ci.org/stefandoorn/3dbinpacking-php-api.svg?branch=master)](https://travis-ci.org/stefandoorn/3dbinpacking-php-api)
